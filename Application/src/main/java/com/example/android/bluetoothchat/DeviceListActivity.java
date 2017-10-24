@@ -100,10 +100,10 @@ public class DeviceListActivity extends Activity {
         newDevicesListView.setAdapter(mNewDevicesArrayAdapter);
         newDevicesListView.setOnItemClickListener(mDeviceClickListener);
 
-        /**
-         * TODO: Register the BroadcastReceiver (mReceiver) to respond to intents with the ACTION_FOUND and ACTION_DISCOVERY_FINISHED actions
-         */
-
+        IntentFilter broadcastFoundFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        registerReceiver(mReceiver,broadcastFoundFilter);
+        IntentFilter broadcastFinishedFilter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        registerReceiver(mReceiver,broadcastFinishedFilter);
 
         // Get the local Bluetooth adapter
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -149,10 +149,10 @@ public class DeviceListActivity extends Activity {
         // Turn on sub-title for new devices
         findViewById(R.id.title_new_devices).setVisibility(View.VISIBLE);
 
-        /**
-         * TODO: If the adapter is discoverying, cancel that discovery
-         * TODO: Either way, then tell the adapter to startDiscovery
-         */
+        if(mBtAdapter.isDiscovering()){
+            mBtAdapter.cancelDiscovery();
+        }
+        mBtAdapter.startDiscovery();
 
     }
 
